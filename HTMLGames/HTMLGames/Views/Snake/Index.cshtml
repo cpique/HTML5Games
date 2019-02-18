@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Snake game";
+}
+
+<h2>Snake game</h2>
+<div id="canvasContainer">
+    <canvas id="canvas" width="500" height="300"></canvas>
+</div>
+
+@section Scripts
+{
+    <script src="@Url.Content("~/Scripts/Snake/snake.js")"></script>
+    <link rel="stylesheet" href="@Url.Content("~/Content/snake/snake.css")"/>
+}

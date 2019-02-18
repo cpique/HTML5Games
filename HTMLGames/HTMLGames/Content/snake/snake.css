@@ -1,0 +1,10 @@
+﻿body {
+}
+
+canvas {
+    border: solid;
+}
+
+#canvasContainer {
+    text-align: center;
+}
