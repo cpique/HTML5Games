@@ -78,6 +78,26 @@
                 this.back.y = this.y;
             }
         }
+
+        hit(head, second = false) {
+            if (this === head && !this.hasBack()) return false;
+            if (this === head) return this.back.hit(head, true);
+
+            if (second && !this.hasBack()) return false;
+            if (second) return this.back.hit(head);
+
+            //No es ni cabeza ni segundo
+            if (this.hasBack()) {
+                return squareHit(this, head) || this.back.hit(head);
+            }
+
+            //No es la cabeza ni segundo, soy el ultimo
+            return squareHit(this, head);
+        }
+
+        hitBorder() {
+            return this.x > 490 || this.x < 0 || this.y > 290 || this.y < 0;
+        }
     }
 
     class Snake {
@@ -96,18 +116,22 @@
         }
 
         right() {
+            if (this.direction === "left") return;
             this.direction = "right";
         }
 
         left() {
+            if (this.direction === "right") return;
             this.direction = "left";
         }
 
         up() {
+            if (this.direction === "down") return;
             this.direction = "up";
         }
 
         down() {
+            if (this.direction === "up") return;
             this.direction = "down";
         }
 
@@ -119,7 +143,12 @@
         }
 
         eat() {
+            //contador iria aqui, contador++
             this.head.add();
+        }
+
+        dead() {
+            return this.head.hit(this.head) || this.head.hitBorder();
         }
     }
 
@@ -141,11 +170,17 @@
         return false;
     });
 
-    setInterval(function () {
+    const animation = setInterval(function () {
         snake.move();
         context.clearRect(0,0,canvas.width,canvas.height);
         snake.draw();
         drawFood();
+
+        if (snake.dead()) {
+            console.log('Se acabó el juego');
+            window.clearInterval(animation);
+        }
+
     }, 1000 / 5); //5 ejecuciones de la funcion por segundo
 
     setInterval(function () {
@@ -180,6 +215,10 @@
         })
     }
 
+    function squareHit(squareOne, squareTwo) {
+        return squareOne.x == squareTwo.x && squareOne.y == squareTwo.y;
+    }
+
     function hit(a, b) {
         var hit = false;
         //Colisiones horizontales
@@ -202,3 +241,9 @@
 
 
 
+//TODO
+
+//Agregar diferentes dificultades, cambiando la cantidad de fotogramas
+//Botones para reiniciar el juego
+//Llevar registro del puntaje
+//Poner algunos colores, un color suave de fondo
